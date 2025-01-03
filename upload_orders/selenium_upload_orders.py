@@ -83,18 +83,21 @@ def upload_order(driver, file_path, short_wait_time=5, long_wait_time=30):
 
                 # wait for the button to be visible
                 submit_order_btn = long_wait.until(
-                    EC.visibility_of_element_located((By.XPATH, '//button[text()="Submit Order"]')) 
+                    EC.visibility_of_element_located((By.XPATH, '//button[text()="Submit Orders"]')) 
                 )
                 logger.info('submit button visible')
 
                 #scroll the button into view
-                driver.execute_script("arguments[0].scrollIntoView(true);", submit_order_btn)
-                logger.info('scrolled into view')
+                # driver.execute_script("arguments[0].scrollIntoView(true);", submit_order_btn)
+                # logger.info('scrolled into view')
+                
+                # actions = ActionChains(driver)
+                # actions.move_to_element(submit_order_btn).click().perform()
 
                 # wait for it to be clickable
-                submit_order_btn = long_wait.until(
-                    EC.element_to_be_clickable((By.XPATH, '//button[text()="Submit Order"]'))
-                )
+                # submit_order_btn = long_wait.until(
+                #     EC.element_to_be_clickable((By.XPATH, '//button[text()="Submit Orders"]'))
+                # )
 
                 # click with JS
                 try:
