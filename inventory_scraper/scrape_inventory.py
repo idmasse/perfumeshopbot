@@ -13,7 +13,7 @@ logger = logging.getLogger(__name__)
 
 load_dotenv()
 
-def download_inventory_to_csv(output_filename='shopify.csv'):
+def download_inventory_to_csv(output_filename='/Users/flippackstation5/python_scripts/PerfumeShopBot/shopify.csv'):
     session = requests.Session()
 
     login_url = os.getenv('INVENTORY_LOGIN_URL')
