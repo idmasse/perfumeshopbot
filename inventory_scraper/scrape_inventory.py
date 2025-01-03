@@ -73,7 +73,7 @@ def upload_inventory_to_ftp(local_path, remote_directory='/in/inventory'):
         logger.info('FTP connection closed')
 
 def scrape_inventory():
-    output_filename = 'shopify.csv'
+    output_filename = '/Users/flippackstation5/python_scripts/PerfumeShopBot/shopify.csv'
     
     # download inventory file
     downloaded = download_inventory_to_csv(output_filename)
