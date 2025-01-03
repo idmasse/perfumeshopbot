@@ -19,3 +19,6 @@ Fulfillment Management:
 Success Confirmation:
     - If orders are successfully uploaded, a confirmation e-mail is sent with the batch number for the orders.
     - If any of the functions fail, an e-mail alert is sent.
+
+### Usage
+The script is controlled by a plist, set to run every hour. The plist should be added to ~/Library/LaunchAgents/ and then loaded and started. 
