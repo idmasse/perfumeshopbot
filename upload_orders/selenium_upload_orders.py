@@ -182,7 +182,7 @@ def upload_order(driver, file_path, short_wait_time=5, long_wait_time=30):
             # Click first proceed button
             logger.info("Clicking first 'Proceed' button.")
             proceed_btn_1 = short_wait.until(
-                EC.element_to_be_clickable((By.XPATH, "//button[text()='Proceed']"))  # Updated locator
+                EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div[3]/div[2]/div/div[2]/button[2]")) 
             )
             proceed_btn_1.click()
             logger.info("First 'Proceed' button clicked successfully.")
@@ -190,7 +190,7 @@ def upload_order(driver, file_path, short_wait_time=5, long_wait_time=30):
             # Click second proceed button
             logger.info("Clicking second 'Proceed' button.")
             proceed_btn_2 = short_wait.until(
-                EC.element_to_be_clickable((By.XPATH, "//button[text()='Proceed']"))  # Updated locator
+                EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/form/div/div[2]/div/div[2]/div[4]/button[2]"))
             )
             proceed_btn_2.click()
             logger.info("Second 'Proceed' button clicked successfully.")
