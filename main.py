@@ -60,7 +60,7 @@ def upload_orders():
                 if batch_number:
                     batch_numbers.append(batch_number)
                     logger.info(f"successfully uploaded {file_name} from batch number: {batch_number}. Moving order file to the 'processed' directory.")
-                    # return batch_number
+                    return batch_number
                 # 4 move this single order file to 'processed' dir
                 move_files_to_processed(LOCAL_ORDERS_DIR, LOCAL_PROCESSED_DIR, [file_name])
                 upload_orders_success = True
