@@ -16,8 +16,8 @@ LOGIN_USERNAME = os.getenv('LOGIN_USERNAME')
 LOGIN_PASSWORD = os.getenv('LOGIN_PASSWORD')
 
 # local directories
-LOCAL_ORDERS_DIR = '/Users/flippackstation5/python_scripts/perfumshoptbot/orders'
-LOCAL_PROCESSED_DIR = os.path.join(LOCAL_ORDERS_DIR, '/Users/flippackstation5/python_scripts/perfumshoptbot/processed')
+LOCAL_ORDERS_DIR = os.getenv('LOCAL_ORDERS_DIR')
+LOCAL_PROCESSED_DIR = os.getenv('LOCAL_PROCESSED_DIR')
 
 upload_orders_success = False
 
