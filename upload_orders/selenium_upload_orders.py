@@ -130,10 +130,6 @@ load_dotenv()
 logger = logging.getLogger(__name__)
 logger.setLevel(logging.INFO)  
 
-handler = logging.StreamHandler()
-formatter = logging.Formatter('%(asctime)s - %(levelname)s - %(message)s')
-handler.setFormatter(formatter)
-logger.addHandler(handler)
 
 MAX_RETRIES = 3
 RETRY_DELAY = 5  # seconds
@@ -164,19 +160,18 @@ def upload_order(driver, file_path, short_wait_time=5, long_wait_time=30):
             upload_file_input.send_keys(os.path.abspath(file_path))
             logger.info("File path sent to upload input.")
 
-            # Click submit button for file upload
+            # Click upload button for file upload
             try:
-                submit_button = long_wait.until(
+                upload_button = long_wait.until(
                     EC.element_to_be_clickable((By.ID, 'uploadBtn'))
                 )
                 logger.info("Clicking the upload submit button.")
-                submit_button.click()
-                logger.info("Upload submit button clicked successfully.")
+                upload_button.click()
             except (ElementClickInterceptedException, TimeoutException) as e:
                 logger.warning(f"Could not click upload submit button normally: {e}")
                 # Attempt JavaScript click as fallback
-                submit_button = driver.find_element(By.ID, 'uploadBtn')
-                driver.execute_script("arguments[0].click();", submit_button)
+                upload_button = driver.find_element(By.ID, 'uploadBtn')
+                driver.execute_script("arguments[0].click();", upload_button)
                 logger.info("Upload submit button clicked using JavaScript.")
 
             # Click first proceed button
@@ -185,7 +180,6 @@ def upload_order(driver, file_path, short_wait_time=5, long_wait_time=30):
                 EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/div[3]/div[2]/div/div[2]/button[2]")) 
             )
             proceed_btn_1.click()
-            logger.info("First 'Proceed' button clicked successfully.")
 
             # Click second proceed button
             logger.info("Clicking second 'Proceed' button.")
@@ -193,7 +187,6 @@ def upload_order(driver, file_path, short_wait_time=5, long_wait_time=30):
                 EC.element_to_be_clickable((By.XPATH, "/html/body/div[1]/form/div/div[2]/div/div[2]/div[4]/button[2]"))
             )
             proceed_btn_2.click()
-            logger.info("Second 'Proceed' button clicked successfully.")
 
             # Select 'Pay all remaining balance'
             logger.info("Selecting option to pay entire balance.")
@@ -201,7 +194,6 @@ def upload_order(driver, file_path, short_wait_time=5, long_wait_time=30):
                 EC.element_to_be_clickable((By.ID, 'pay0'))
             )
             pay_remaining_balance.click()
-            logger.info("Option to pay entire balance selected.")
 
             # Final submit of the order
             logger.info("Submitting the order.")
@@ -213,21 +205,13 @@ def upload_order(driver, file_path, short_wait_time=5, long_wait_time=30):
             driver.execute_script("arguments[0].scrollIntoView(true);", submit_order_btn)
             logger.info("Scrolled the submit button into view.")
 
-            # Ensure the button is enabled
-            if not submit_order_btn.is_enabled():
-                logger.warning("Submit button is disabled. Waiting until it's enabled.")
-                long_wait.until(lambda d: submit_order_btn.is_enabled())
-                logger.info("Submit button is now enabled.")
-
             # Attempt to click the submit button
             try:
-                submit_order_btn.click()
-                logger.info("Submit order button clicked successfully.")
-            except ElementClickInterceptedException as e:
-                logger.warning(f"ElementClickInterceptedException caught: {e}. Attempting JavaScript click.")
                 driver.execute_script("arguments[0].click();", submit_order_btn)
                 logger.info("Submit order button clicked using JavaScript.")
-
+            except ElementClickInterceptedException as e:
+                logger.warning(f"ElementClickInterceptedException caught: {e}.")
+                
             # Wait for any loaders to appear and disappear
             logger.info("Waiting for submission loader to appear and disappear.")
             try:
@@ -265,9 +249,6 @@ def upload_order(driver, file_path, short_wait_time=5, long_wait_time=30):
 
             except TimeoutException:
                 logger.error("No success alert found. Order submission may have failed.")
-                # Optionally, capture a screenshot for debugging
-                driver.save_screenshot("order_submission_failed.png")
-                logger.info("Screenshot saved as 'order_submission_failed.png'.")
                 return False, None
 
         except Exception as e:
