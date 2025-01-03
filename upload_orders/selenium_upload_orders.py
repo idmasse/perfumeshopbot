@@ -4,7 +4,13 @@ from dotenv import load_dotenv
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
-from selenium.common.exceptions import TimeoutException
+from selenium.webdriver.common.action_chains import ActionChains
+from selenium.common.exceptions import (
+    ElementClickInterceptedException,
+    TimeoutException,
+    NoSuchElementException,
+    StaleElementReferenceException
+)
 import time
 import re
 
@@ -66,13 +72,43 @@ def upload_order(driver, file_path, short_wait_time=5, long_wait_time=30):
             pay_remaining_balance.click()
 
             # final submit of the order
-            logger.info("submitting the order")
-            submit_order_btn = long_wait.until(
-                EC.element_to_be_clickable((By.XPATH, '/html/body/div/form/div/div[2]/div/div[2]/div[6]/button'))
-            )
-            submit_order_btn.click()
+            # logger.info("submitting the order")
+            # submit_order_btn = long_wait.until(
+            #     EC.element_to_be_clickable((By.XPATH, '/html/body/div/form/div/div[2]/div/div[2]/div[6]/button'))
+            # )
+            # submit_order_btn.click()
 
-            try: # wait for order success message & scrape it
+            try:
+                logger.info("Submitting the order")
+
+                # wait for the button to be visible
+                submit_order_btn = long_wait.until(
+                    EC.visibility_of_element_located((By.XPATH, '//button[text()="Submit Order"]'))  # Adjust XPath as needed
+                )
+
+                #scroll the button into view
+                driver.execute_script("arguments[0].scrollIntoView(true);", submit_order_btn)
+
+                # wait for it to be clickable
+                submit_order_btn = long_wait.until(
+                    EC.element_to_be_clickable((By.XPATH, '//button[text()="Submit Order"]'))
+                )
+
+                # click with JS as a fallback
+                try:
+                    submit_order_btn.click()
+                except selenium.common.exceptions.ElementClickInterceptedException:
+                    driver.execute_script("arguments[0].click();", submit_order_btn)
+
+                logger.info("Order submitted successfully")
+
+            except Exception as e:
+                logger.error(f"An unexpected error occurred: {e}")
+                raise e
+
+
+            # wait for order success message & scrape it
+            try: 
                 logger.info("waiting for success message...")
                 success_alert = long_wait.until(
                     EC.visibility_of_element_located(
