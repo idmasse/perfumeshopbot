@@ -14,7 +14,7 @@ FTP_HOST = os.getenv('FTP_HOST')
 FTP_USER = os.getenv('FTP_USER')
 FTP_PASS = os.getenv('FTP_PASS')
 
-LOCAL_ORDERS_DIR = 'orders'
+LOCAL_ORDERS_DIR = '/Users/flippackstation5/python_scripts/perfumeshopbot/orders'
 
 REMOTE_ORDERS_DIR = '/out/orders'
 REMOTE_INVENTORY_DIR='/in/inventory'
