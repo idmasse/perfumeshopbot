@@ -83,27 +83,30 @@ def upload_order(driver, file_path, short_wait_time=5, long_wait_time=30):
 
                 # wait for the button to be visible
                 submit_order_btn = long_wait.until(
-                    EC.visibility_of_element_located((By.XPATH, '//button[text()="Submit Order"]'))  # Adjust XPath as needed
+                    EC.visibility_of_element_located((By.XPATH, '//button[text()="Submit Order"]')) 
                 )
+                logger.info('submit button visible')
 
                 #scroll the button into view
                 driver.execute_script("arguments[0].scrollIntoView(true);", submit_order_btn)
+                logger.info('scrolled into view')
 
                 # wait for it to be clickable
                 submit_order_btn = long_wait.until(
                     EC.element_to_be_clickable((By.XPATH, '//button[text()="Submit Order"]'))
                 )
 
-                # click with JS as a fallback
+                # click with JS
                 try:
-                    submit_order_btn.click()
-                except selenium.common.exceptions.ElementClickInterceptedException:
                     driver.execute_script("arguments[0].click();", submit_order_btn)
+                except selenium.common.exceptions.ElementClickInterceptedException:
+                    logger.error("js click failed", {e})
+                    
 
                 logger.info("Order submitted successfully")
 
             except Exception as e:
-                logger.error(f"An unexpected error occurred: {e}")
+                logger.error(f"unable to click submit order button: {e}")
                 raise e
 
 
