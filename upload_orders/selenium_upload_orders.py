@@ -68,31 +68,30 @@ def upload_order(driver, file_path, short_wait_time=5, long_wait_time=30):
             # final submit of the order
             logger.info("submitting the order")
             submit_order_btn = long_wait.until(
-                EC.element_to_be_clickable((By.ID, 'submitBtn'))
+                EC.element_to_be_clickable((By.XPATH, '/html/body/div/form/div/div[2]/div/div[2]/div[6]/button'))
             )
             submit_order_btn.click()
 
-            # try: # wait for order success message & scrape it
-            #     logger.info("waiting for success message...")
-            #     success_alert = long_wait.until(
-            #         EC.visibility_of_element_located(
-            #             (By.CSS_SELECTOR, "div.alert.alert-success.mt-3")
-            #         )
-            #     )
-            #     success_message = success_alert.text
-            #     logger.info(f"success message found: {success_message}")  # display success msg
+            try: # wait for order success message & scrape it
+                logger.info("waiting for success message...")
+                success_alert = long_wait.until(
+                    EC.visibility_of_element_located(
+                        (By.CSS_SELECTOR, "div.alert.alert-success.mt-3")
+                    )
+                )
+                success_message = success_alert.text
+                logger.info(f"success message found: {success_message}")  # display success msg
 
-            #     match = re.search(r'Batch #(\d+)', success_message)
-            #     batch_number = match.group(1) if match else None
-            #     if batch_number:
-            #         logger.info(f'scraped batch number: {batch_number}')
+                match = re.search(r'Batch #(\d+)', success_message)
+                batch_number = match.group(1) if match else None
+                if batch_number:
+                    logger.info(f'scraped batch number: {batch_number}')
 
-            # return True, batch_number  # if we get here, everything worked & order submitted
-            return True
+                return True, batch_number  # if we get here, everything worked & order submitted
 
-            # except TimeoutException:
-            #     logger.error("no success alert found. order submission may have failed.")
-            #     return False, None
+            except TimeoutException:
+                logger.error("no success alert found. order submission may have failed.")
+                return False, None
 
         except Exception as e:
             logger.error(f"attempt {attempt + 1} failed: {e}", exc_info=True)
