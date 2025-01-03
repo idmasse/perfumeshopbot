@@ -68,7 +68,7 @@ def upload_order(driver, file_path, short_wait_time=5, long_wait_time=30):
             # final submit of the order
             logger.info("submitting the order")
             submit_order_btn = long_wait.until(
-                EC.presence_of_element_located((By.ID, 'submitBtn'))
+                EC.element_to_be_clickable((By.ID, 'submitBtn'))
             )
             submit_order_btn.click()
 
