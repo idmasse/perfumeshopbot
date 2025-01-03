@@ -6,14 +6,14 @@
         <string>com.perfumeshop.main</string>
         <key>ProgramArguments</key>
         <array>
-            <string>/Users/flippackstation5/python_scripts/perfumeshop/venv/python3</string>
-            <string>/Users/flippackstation5/python_scripts/perfumeshop/main.py</string>
+            <string>/Users/flippackstation5/python_scripts/perfumeshopbot/venv/bin/python3</string>
+            <string>/Users/flippackstation5/python_scripts/perfumeshopbot/main.py</string>
         </array>
         <key>StartInterval</key>
         <integer>3600</integer> <!-- 1 hour in seconds -->
         <key>StandardOutPath</key>
-        <string>/Users/flippackstation5/python_scripts/perfumeshop/logs/main.out</string>
+        <string>/Users/flippackstation5/python_scripts/perfumeshopbot/logs/main.out</string>
         <key>StandardErrorPath</key>
-        <string>/Users/flippackstation5/python_scripts/perfumeshop/logs/main.err</string>
+        <string>/Users/flippackstation5/python_scripts/perfumeshopbot/logs/main.err</string>
     </dict>
 </plist>
