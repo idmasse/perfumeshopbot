@@ -9,6 +9,7 @@ from utils.ftp_utils import connect_ftp, upload_files
 from utils.email_utils import send_email
 from utils.selenium_login import perfume_selenium_login
 from utils.selenium_setup import get_headless_driver
+from datetime import datetime, timedelta
 import time
 
 sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
@@ -31,7 +32,13 @@ def download_tracking_to_csv():
         return None
     
     try:
-        driver.get(os.getenv('ORDERS_PAGE_URL'))
+        #format the url to download the tracking file
+        today = datetime.today()
+        one_week_prior = today - timedelta(days=7) # 7 days prior
+        date_range = f"{one_week_prior.strftime('%Y-%m-%d')}_{today.strftime('%Y-%m-%d')}"
+        url = f"https://perfumesw.com/DropShip/view/orders/orders.php?date={date_range}"
+
+        driver.get(url)
 
         wait = WebDriverWait(driver, 20)
 
