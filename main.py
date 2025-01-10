@@ -60,7 +60,6 @@ def upload_orders():
                 if batch_number:
                     batch_numbers.append(batch_number)
                     logger.info(f"successfully uploaded {file_name} from batch number: {batch_number}. Moving order file to the 'processed' directory.")
-                    return batch_number
                 # 4 move this single order file to 'processed' dir
                 move_files_to_processed(LOCAL_ORDERS_DIR, LOCAL_PROCESSED_DIR, [file_name])
                 upload_orders_success = True
@@ -100,11 +99,11 @@ def scrape_tracking_to_ftp():
 if __name__ == '__main__':
     batch_numbers = upload_orders()
     scrape_inventory_to_ftp()
-    scrape_tracking()
+    scrape_tracking_to_ftp()
 
     # check if all functions completed successfully and if so, send an email
     if upload_orders_success:
         batch_numbers_str = ', '.join(batch_numbers) if batch_numbers else 'no batch numbers'
         success_message = f"PerfumeShopBot completed successfully. Processed batches: {batch_numbers_str}"
         send_email("PerfumeBot ran successfully", success_message)
-        logger.info("success email sent.")  
+        logger.info("order submission success email sent.")  
