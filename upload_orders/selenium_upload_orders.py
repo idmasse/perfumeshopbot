@@ -81,20 +81,21 @@ def upload_order(driver, file_path, short_wait_time=5, long_wait_time=30):
             #     EC.element_to_be_clickable((By.ID, 'pay0'))
             # )
             # pay_remaining_balance.click()
-            
-            time.sleep(5)
+
             # Final submit of the order
-            logger.info("Submitting the order.")
             # submit_order_btn = long_wait.until(
             #     EC.presence_of_element_located((By.ID, 'submitBtn')) 
             # )
-            submit_order_btn = find_element(By.ID, 'submitBtn')
+            time.sleep(5)
+            logger.info("Submitting the order.")
+            submit_order_btn = driver.find_element(By.ID, 'submitBtn')
             try:
                 submit_order_btn.click()
-                logger.info('clicked submit order button')
-            except:
+                logger.info('Clicked submit order button')
+            except ElementClickInterceptedException as e:
+                # JavaScript fallback for cases where the element cannot be clicked directly.
                 driver.execute_script("arguments[0].click();", submit_order_btn)
-                logger.info('clicked with JS as fallback')
+                logger.info('Clicked with JS as fallback.')
                 logger.warning(f"ElementClickInterceptedException caught: {e}.")
 
             # Scroll the submit button into view
