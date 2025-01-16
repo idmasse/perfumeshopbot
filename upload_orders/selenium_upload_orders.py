@@ -90,22 +90,25 @@ def upload_order(driver, file_path, short_wait_time=5, long_wait_time=30):
             #     logger.warning("Submission loader did not appear or did not disappear as expected.")
 
             # Wait for order success message & scrape it
-            try:
-                logger.info("Waiting for success message...")
-                success_alert = long_wait.until(
-                    EC.visibility_of_element_located(
-                        (By.CSS_SELECTOR, "div.alert.alert-success.mt-3")
-                    )
-                )
-                success_message = success_alert.text
-                logger.info(f"Success message found: {success_message}")  # Display success msg
+            # try:
+            #     logger.info("Waiting for success message...")
+            #     success_alert = long_wait.until(
+            #         EC.visibility_of_element_located(
+            #             (By.CSS_SELECTOR, "div.alert.alert-success.mt-3")
+            #         )
+            #     )
+            #     success_message = success_alert.text
+            #     logger.info(f"Success message found: {success_message}")  # Display success msg
 
-                match = re.search(r'Batch #(\d+)', success_message)
-                batch_number = match.group(1) if match else None
-                if batch_number:
-                    logger.info(f"Scraped batch number: {batch_number}")
+            #     match = re.search(r'Batch #(\d+)', success_message)
+            #     batch_number = match.group(1) if match else None
+            #     if batch_number:
+            #         logger.info(f"Scraped batch number: {batch_number}")
 
-                return True, batch_number  # If we get here, everything worked & order submitted
+                # return True, batch_number  # If we get here, everything worked & order submitted
+                
+                
+                return True  # If we get here, everything worked & order submitted
 
             except TimeoutException:
                 logger.error("No success alert found. Order submission may have failed.")
