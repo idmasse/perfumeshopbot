@@ -5,7 +5,7 @@ from upload_orders.move_local_files import move_files_to_processed
 from inventory_scraper.scrape_inventory import scrape_inventory
 from tracking_scraper.scrape_tracking import scrape_tracking
 from utils.selenium_login import perfume_selenium_login, logger
-from utils.ftp_utils import connect_ftp, download_files, delete_files_on_ftp
+from utils.ftp_utils import connect_ftp, download_files, delete_files_on_ftp, archive_files_on_ftp
 from utils.selenium_setup import get_headless_driver
 from utils.email_utils import send_email
 
@@ -24,6 +24,7 @@ upload_orders_success = False
 def upload_orders():
     global upload_orders_success
     batch_numbers = []
+    
     # 1. connect to FTP & download files
     ftp = connect_ftp()
     downloaded_files = []
@@ -31,7 +32,7 @@ def upload_orders():
         try:
             downloaded_files = download_files(ftp)  # download files from FTP
             if downloaded_files:
-                delete_files_on_ftp(ftp, downloaded_files)  # delete downloaded files from FTP
+                archive_files_on_ftp(ftp, downloaded_files)  # archive downloaded files from FTP
         finally:
             ftp.quit()
             logger.info("FTP connection closed")
