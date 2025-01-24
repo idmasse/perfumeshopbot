@@ -6,8 +6,11 @@ from ftplib import FTP, error_perm, error_temp, error_reply
 
 load_dotenv()
 
-logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s - %(message)s",
+)
 
 # FTP creds
 FTP_HOST = os.getenv('FTP_HOST')
@@ -18,6 +21,7 @@ LOCAL_ORDERS_DIR = os.getenv('LOCAL_ORDERS_DIR')
 LOCAL_PROCESSED_DIR = os.getenv('LOCAL_PROCESSED_DIR')
 
 REMOTE_ORDERS_DIR = '/out/orders'
+REMOTE_ORDER_ARCHIVE_DIR = '/out/orders/archive' 
 REMOTE_INVENTORY_DIR='/in/inventory'
 
 def connect_ftp():
@@ -79,3 +83,18 @@ def upload_files(ftp, local_file_path, remote_file_name):
     except Exception as e:
         logger.error(f"error during file upload: {e}")
         sys.exit(1)
+
+def archive_files_on_ftp(ftp, files):
+   try:
+       try:
+           ftp.cwd(REMOTE_ORDER_ARCHIVE_DIR) # cd to dir
+       except error_perm:
+           ftp.mkd(REMOTE_ORDER_ARCHIVE_DIR) # create archive dir if it doesn't exist
+
+       ftp.cwd(REMOTE_ORDERS_DIR)
+       for file_name in files:
+           ftp.rename(file_name, f"{REMOTE_ORDER_ARCHIVE_DIR}/{file_name}") #move files from orders dir to archive dir
+           logger.info(f"archived file on FTP: {file_name}")
+   except Exception as e:
+       logger.error(f"error archiving files on FTP: {e}")
+       sys.exit(1)
