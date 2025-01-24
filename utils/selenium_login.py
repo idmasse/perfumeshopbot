@@ -9,6 +9,10 @@ from selenium.webdriver.support import expected_conditions as EC
 load_dotenv()
 
 logger = logging.getLogger(__name__)
+logging.basicConfig(
+    level=logging.INFO,
+    format="%(asctime)s [%(levelname)s] %(name)s - %(message)s",
+)
 
 MAX_RETRIES = 3
 RETRY_DELAY = 5 # seconds
