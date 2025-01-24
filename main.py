@@ -5,7 +5,7 @@ from upload_orders.move_local_files import move_files_to_processed
 from inventory_scraper.scrape_inventory import scrape_inventory
 from tracking_scraper.scrape_tracking import scrape_tracking
 from utils.selenium_login import perfume_selenium_login, logger
-from utils.ftp_utils import connect_ftp, download_files, delete_files_on_ftp, archive_files_on_ftp
+from utils.ftp_utils import connect_ftp, download_files, archive_files_on_ftp
 from utils.selenium_setup import get_headless_driver
 from utils.email_utils import send_email
 
@@ -99,8 +99,8 @@ def scrape_tracking_to_ftp():
 
 if __name__ == '__main__':
     batch_numbers = upload_orders()
-    scrape_inventory_to_ftp()
-    scrape_tracking_to_ftp()
+    # scrape_inventory_to_ftp()
+    # scrape_tracking_to_ftp()
 
     # check if all functions completed successfully and if so, send an email
     if upload_orders_success:
