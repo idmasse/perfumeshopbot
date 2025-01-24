@@ -99,8 +99,8 @@ def scrape_tracking_to_ftp():
 
 if __name__ == '__main__':
     batch_numbers = upload_orders()
-    # scrape_inventory_to_ftp()
-    # scrape_tracking_to_ftp()
+    scrape_inventory_to_ftp()
+    scrape_tracking_to_ftp()
 
     # check if all functions completed successfully and if so, send an email
     if upload_orders_success:
