@@ -11,7 +11,7 @@ logging.basicConfig(
 logger = logging.getLogger(__name__)
 
 def get_headless_driver():
-    logger.info("Initializing Chrome driver (headless)...")
+    logger.info("Initializing Chrome driver...")
     chrome_options = Options()
     chrome_options.add_argument('--headless')
     chrome_options.add_argument('--no-sandbox')
