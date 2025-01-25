@@ -141,4 +141,3 @@ def scrape_tracking():
 
 if __name__ == '__main__':
     scrape_tracking()
-    delete_tracking_file_after_upload()
