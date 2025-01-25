@@ -17,7 +17,7 @@ sys.path.append(os.path.abspath(os.path.join(os.path.dirname(__file__), '..')))
 logging.basicConfig(level=logging.INFO)
 logger = logging.getLogger(__name__)
 
-load_dotenv()
+load_dotenv(override=True)
 
 LOGIN_USERNAME = os.getenv('LOGIN_USERNAME')
 LOGIN_PASSWORD = os.getenv('LOGIN_PASSWORD')
@@ -37,12 +37,15 @@ def download_tracking_to_csv():
         one_week_prior = today - timedelta(days=7) # 7 days prior
         date_range = f"{one_week_prior.strftime('%Y-%m-%d')}_{today.strftime('%Y-%m-%d')}"
         orders_page_url = os.getenv('ORDERS_PAGE_URL')
-        url = f"{orders_page_url}?status=2&date={date_range}&view=150"
+        url = f"{orders_page_url}?status=2&date={date_range}&view=100"
 
+        logger.info(f"navigating to tracking file URL: {url}")
         driver.get(url)
 
-        wait = WebDriverWait(driver, 20)
+        wait = WebDriverWait(driver, 30)
+        super_long_wait = WebDriverWait(driver, 300)
 
+        logger.info("clicking first download CSV utton")
         download_csv_button = wait.until(
             EC.element_to_be_clickable((By.ID, 'csvBtn'))
         )
@@ -52,7 +55,7 @@ def download_tracking_to_csv():
 
         time.sleep(3)  # wait for the popup to appear
 
-        confirm_button = wait.until(
+        confirm_button = super_long_wait.until(
             EC.element_to_be_clickable(
                 (By.CSS_SELECTOR, 'button.swal2-confirm.swal2-styled.swal2-default-outline')
             )
