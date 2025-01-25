@@ -36,7 +36,8 @@ def download_tracking_to_csv():
         today = datetime.today()
         one_week_prior = today - timedelta(days=7) # 7 days prior
         date_range = f"{one_week_prior.strftime('%Y-%m-%d')}_{today.strftime('%Y-%m-%d')}"
-        url = f"https://perfumesw.com/DropShip/view/orders/orders.php?date={date_range}"
+        orders_page_url = os.getenv('ORDERS_PAGE_URL')
+        url = f"{orders_page_url}?status=2&date={date_range}&view=150"
 
         driver.get(url)
 
