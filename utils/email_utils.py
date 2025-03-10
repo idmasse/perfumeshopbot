@@ -1,6 +1,7 @@
 import smtplib
 from email.mime.text import MIMEText
 from email.mime.multipart import MIMEMultipart
+from email.mime.application import MIMEApplication
 from dotenv import load_dotenv
 import os
 
@@ -30,5 +31,44 @@ def send_email(subject, body):
         print("email sent successfully")
     except Exception as e:
         print(f"failed to send email: {e}")
+    finally:
+        server.quit()
+
+
+def send_email_attachment(subject, body, attachment_path):
+    sender_email = os.getenv('SENDER_EMAIL')
+    receiver_email = os.getenv('RECEIVER_EMAIL')
+    email_password = os.getenv('EMAIL_PASSWORD')
+    
+    # create email msg headers
+    msg = MIMEMultipart()
+    msg['From'] = sender_email
+    msg['To'] = receiver_email
+    msg['Subject'] = subject
+    
+    # create email msg body
+    msg.attach(MIMEText(body, 'plain'))
+    
+    # attach the file
+    try:
+        with open(attachment_path, 'rb') as file:
+            attachment = MIMEApplication(file.read(), Name=os.path.basename(attachment_path))
+            attachment['Content-Disposition'] = f'attachment; filename="{os.path.basename(attachment_path)}"'
+            msg.attach(attachment)
+    except Exception as e:
+        print(f"Failed to attach file {attachment_path}: {e}")
+    
+    # connect to the server and send the email
+    try:
+        server = smtplib.SMTP('smtp.gmail.com', 587)
+        server.starttls()
+        server.login(sender_email, email_password)
+        text = msg.as_string()
+        server.sendmail(sender_email, receiver_email, text)
+        print(f"Email sent successfully with attachment: {attachment_path}")
+        return True
+    except Exception as e:
+        print(f"Failed to send email: {e}")
+        return False
     finally:
         server.quit()
