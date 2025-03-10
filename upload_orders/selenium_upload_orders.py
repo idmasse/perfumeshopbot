@@ -2,7 +2,7 @@ import logging
 import os
 import re
 from dotenv import load_dotenv
-from utils.email_utils import send_email
+from utils.email_utils import send_email_attachment
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
@@ -11,6 +11,7 @@ from selenium.common.exceptions import (
     NoSuchElementException,
     TimeoutException
 )
+import time
 
 load_dotenv()
 
@@ -36,6 +37,9 @@ def upload_order(driver, file_path):
     if not os.path.isfile(file_path):  
         logger.error(f"File not found: {file_path}")
         return False, None
+    
+    batch_number = None
+    oos_detected = False
 
     # upload the order file
     try:
@@ -59,23 +63,32 @@ def upload_order(driver, file_path):
 
         # override address validation if necessary
         try:
-             logger.info('address verification override')
+             logger.info('checking for address verification prompt')
              proceed_button = short_wait(By.CLASS_NAME, 'proceedBtn')
              proceed_button.click()
-        except NoSuchElementException:
+        except (TimeoutException, NoSuchElementException):
              logger.info('address already verfied')
 
         # override OOS / partial fullfillment if necessary
-        oos_message = None
         try:
-            oos_message = long_wait(By.XPATH, "//div[contains(@class, 'bg-danger-subtle')]//strong[text()='Warning!']")
-            alert_div = oos_message.find_element(By.XPATH, "..")
-            logger.warning(f'OOS message found: {alert_div.text}')
+            logger.info('checking for OOS message')
+            oos_message = driver_short_wait.until(
+                EC.presence_of_element_located((By.CLASS_NAME, 'alert'))
+            )
+            oos_detected = True
+            logger.warning(f'OOS message found: {oos_message.text}. clicking checkout button')
+
+            # take a screenshot so we have the order number to process OOS manually
+            timestamp = time.strftime("%Y%m%d-%H%M%S")
+            oos_screenshot_path = f'oos_items_{timestamp}.png'
+            driver.save_screenshot(oos_screenshot_path)
 
             checkout_btn = short_wait(By.ID, 'submitBtn')
+            driver.execute_script("arguments[0].scrollIntoView(true);", checkout_btn) #scroll into view
             driver.execute_script("arguments[0].click();", checkout_btn)
             logger.info('checout button clicked')
-                  
+            time.sleep(2)
+
         except (TimeoutException, NoSuchElementException):
             logger.info('no items found to be out of stock')
 
@@ -101,13 +114,18 @@ def upload_order(driver, file_path):
 
         match = re.search(r'#(\d+)', success_message) #parse out just the batch number 
         batch_number = match.group(1) if match else None
+
+        if oos_detected:
+                send_email_attachment(
+                     subject = 'PerfumeShopBot OOS', 
+                     body = f'PerfumeShop orders from batch: {batch_number} had OOS items. See attachment for order number(s)',
+                     attachment_path = oos_screenshot_path
+                )
+                    
         if batch_number:
             logger.info(f"Scraped batch number: {batch_number}")
 
-        if oos_message is not None:
-            send_email('PerfumeShopBot OOS', f'Orders from batch {batch_number} had OOS items.')
-
             return True, batch_number  # If we get here, everything worked & order submitted
-
+        
     except Exception as e:
         return False, None
