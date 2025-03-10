@@ -2,11 +2,13 @@ import logging
 import os
 import re
 from dotenv import load_dotenv
+from utils.email_utils import send_email
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.common.exceptions import (
     ElementClickInterceptedException,
+    NoSuchElementException,
     TimeoutException
 )
 
@@ -60,8 +62,21 @@ def upload_order(driver, file_path):
              logger.info('address verification override')
              proceed_button = short_wait(By.CLASS_NAME, 'proceedBtn')
              proceed_button.click()
-        except:
+        except NoSuchElementException:
              logger.info('address already verfied')
+
+        # override OOS / partial fullfillment if necessary
+        oos_message = None
+        try:
+             oos_message = long_wait(By.XPATH, "//div[contains(@class, 'bg-danger-subtle') and contains(text(), 'currently out of stock')]")
+             logger.warning('OOS message found')
+
+             checkout_btn = short_wait(By.ID, 'submitBtn')
+             driver.execute_script("arguments[0].click();", checkout_btn)
+             logger.info('checout button clicked')
+                  
+        except NoSuchElementException:
+            logger.info('no items found to be out of stock')
 
         # submit the order
         logger.info('submitting the order')
@@ -87,6 +102,9 @@ def upload_order(driver, file_path):
         batch_number = match.group(1) if match else None
         if batch_number:
             logger.info(f"Scraped batch number: {batch_number}")
+
+        if oos_message is not None:
+            send_email('PerfumeShopBot OOS', f'Orders from batch {batch_number} had OOS items.')
 
             return True, batch_number  # If we get here, everything worked & order submitted
 
