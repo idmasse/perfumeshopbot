@@ -68,14 +68,15 @@ def upload_order(driver, file_path):
         # override OOS / partial fullfillment if necessary
         oos_message = None
         try:
-             oos_message = long_wait(By.XPATH, "//div[contains(@class, 'bg-danger-subtle') and contains(text(), 'currently out of stock')]")
-             logger.warning('OOS message found')
+            oos_message = long_wait(By.XPATH, "//div[contains(@class, 'bg-danger-subtle')]//strong[text()='Warning!']")
+            alert_div = oos_message.find_element(By.XPATH, "..")
+            logger.warning(f'OOS message found: {alert_div.text}')
 
-             checkout_btn = short_wait(By.ID, 'submitBtn')
-             driver.execute_script("arguments[0].click();", checkout_btn)
-             logger.info('checout button clicked')
+            checkout_btn = short_wait(By.ID, 'submitBtn')
+            driver.execute_script("arguments[0].click();", checkout_btn)
+            logger.info('checout button clicked')
                   
-        except NoSuchElementException:
+        except (TimeoutException, NoSuchElementException):
             logger.info('no items found to be out of stock')
 
         # submit the order
