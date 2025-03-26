@@ -116,11 +116,11 @@ def upload_order(driver, file_path):
         batch_number = match.group(1) if match else None
 
         if oos_detected:
-                send_email_attachment(
-                     subject = 'PerfumeShopBot OOS',
-                     body = f'PerfumeShop orders from batch: {batch_number} had OOS items. See attachment for order number(s)',
-                     attachment_path = oos_screenshot_path
-                )
+            send_email_attachment(
+                subject = 'PerfumeShopBot OOS',
+                body = f'PerfumeShop orders from batch: {batch_number} had OOS items. See attachment for order number(s)',
+                attachment_path = oos_screenshot_path
+            )
                     
         if batch_number:
             logger.info(f"Scraped batch number: {batch_number}")

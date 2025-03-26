@@ -9,6 +9,8 @@
             <string>/Users/flippackstation5/python_scripts/perfumeshopbot/venv/bin/python3</string>
             <string>/Users/flippackstation5/python_scripts/perfumeshopbot/main.py</string>
         </array>
+        <key>WorkingDirectory</key>
+        <string>/Users/flippackstation5/python_scripts/perfumeshopbot</string>
         <key>StartInterval</key>
         <integer>3600</integer> <!-- 1 hour in seconds -->
         <key>StandardOutPath</key>
