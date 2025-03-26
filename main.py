@@ -1,9 +1,9 @@
 import os
 from dotenv import load_dotenv
-from upload_orders.selenium_upload_orders import upload_order
-from upload_orders.move_local_files import move_files_to_processed
-from inventory_scraper.scrape_inventory import scrape_inventory
-from tracking_scraper.scrape_tracking import scrape_tracking
+from upload_orders import upload_order
+from move_local_files import move_files_to_processed
+from scrape_inventory import scrape_inventory
+from scrape_tracking import scrape_tracking
 from utils.selenium_login import perfume_selenium_login, logger
 from utils.ftp_utils import connect_ftp, download_files, archive_files_on_ftp
 from utils.selenium_setup import get_headless_driver
@@ -105,6 +105,6 @@ if __name__ == '__main__':
     # check if all functions completed successfully and if so, send an email
     if upload_orders_success:
         batch_numbers_str = ', '.join(batch_numbers) if batch_numbers else 'no batch numbers'
-        success_message = f"PerfumeShopBot completed successfully. Processed batches: {batch_numbers_str}"
-        send_email("PerfumeBot ran successfully", success_message)
+        success_message = f"PerfumeSpotBot completed successfully. Processed batches: {batch_numbers_str}"
+        send_email("PerfumeSpotBot Order Summary", success_message)
         logger.info("order submission success email sent.")  
