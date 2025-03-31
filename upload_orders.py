@@ -70,27 +70,27 @@ def upload_order(driver, file_path):
              logger.info('address already verfied')
 
         # override OOS / partial fullfillment if necessary
-        try:
-            logger.info('checking for OOS message')
-            oos_message = driver_long_wait.until(
-                EC.presence_of_element_located((By.CSS_SELECTOR, '.alert.alert-sm.bg-danger-subtle.fade.show.py-2.mb-2'))
-            )
-            oos_detected = True
-            logger.warning(f'OOS message found: {oos_message.text}. clicking checkout button')
+        # try:
+            # logger.info('checking for OOS message')
+            # oos_message = driver_long_wait.until(
+            #     EC.presence_of_element_located((By.CSS_SELECTOR, '.alert.alert-sm.bg-danger-subtle.fade.show.py-2.mb-2'))
+            # )
+            # oos_detected = True
+            # logger.warning(f'OOS message found: {oos_message.text}. clicking checkout button')
 
-            # take a screenshot so we have the order number to process OOS manually
-            timestamp = time.strftime("%Y%m%d-%H%M%S")
-            oos_screenshot_path = f'oos_items_{timestamp}.png'
-            driver.save_screenshot(oos_screenshot_path)
+            # # take a screenshot so we have the order number to process OOS manually
+            # timestamp = time.strftime("%Y%m%d-%H%M%S")
+            # oos_screenshot_path = f'oos_items_{timestamp}.png'
+            # driver.save_screenshot(oos_screenshot_path)
 
-            checkout_btn = short_wait(By.ID, 'submitBtn')
-            driver.execute_script("arguments[0].scrollIntoView(true);", checkout_btn) #scroll into view
-            driver.execute_script("arguments[0].click();", checkout_btn)
-            logger.info('checout button clicked')
-            time.sleep(2)
+        #     checkout_btn = short_wait(By.ID, 'submitBtn')
+        #     driver.execute_script("arguments[0].scrollIntoView(true);", checkout_btn) #scroll into view
+        #     driver.execute_script("arguments[0].click();", checkout_btn)
+        #     logger.info('checout button clicked')
+        #     time.sleep(2)
 
-        except (TimeoutException, NoSuchElementException):
-            logger.info('no items found to be out of stock')
+        # except (TimeoutException, NoSuchElementException):
+        #     logger.info('no items found to be out of stock')
 
         # submit the order
         logger.info('submitting the order')
