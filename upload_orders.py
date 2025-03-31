@@ -72,8 +72,8 @@ def upload_order(driver, file_path):
         # override OOS / partial fullfillment if necessary
         try:
             logger.info('checking for OOS message')
-            oos_message = driver_short_wait.until(
-                EC.presence_of_element_located((By.CLASS_NAME, 'alert'))
+            oos_message = driver_long_wait.until(
+                EC.presence_of_element_located((By.CSS_SELECTOR, '.alert.alert-sm.bg-danger-subtle.fade.show.py-2.mb-2'))
             )
             oos_detected = True
             logger.warning(f'OOS message found: {oos_message.text}. clicking checkout button')
