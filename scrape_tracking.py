@@ -37,7 +37,7 @@ def download_tracking_to_csv():
         # today = datetime.today()
 
         orders_page_url = os.getenv('ORDERS_PAGE_URL')
-        url = f"{orders_page_url}?status=2&view=100"
+        url = f"{orders_page_url}?status=2&view=50"
 
         logger.info(f"navigating to tracking file URL: {url}")
         driver.get(url)
@@ -117,7 +117,7 @@ def upload_tracking_to_ftp(filename, remote_directory='/in/fulfillments'):
 
     try:
         # upload the file
-        upload_files(ftp,  local_path, remote_path)
+        upload_files(ftp, local_path, remote_path)
         logger.info(f"successfully uploaded '{local_path}' to FTP: '{remote_path}'")
         return True
     except Exception as e:
