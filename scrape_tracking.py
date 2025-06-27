@@ -51,11 +51,10 @@ def download_tracking_to_csv():
         )
         download_csv_button.click()
         logger.info("clicked the download csv button.")
-        # time.sleep(60)  # wait for the popup to appear
 
         confirm_button = super_long_wait.until(
             EC.element_to_be_clickable(
-                (By.CSS_SELECTOR, 'button.swal2-confirm.swal2-styled.swal2-default-outline')
+                (By.CSS_SELECTOR, 'button.swal2-confirm.swal2-styled')
             )
         )
         confirm_button.click()
