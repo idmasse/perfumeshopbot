@@ -174,4 +174,5 @@ def scrape_tracking():
     return True
 
 if __name__ == '__main__':
-    scrape_tracking()
+    success = scrape_tracking()
+    sys.exit(0 if success else 1)
